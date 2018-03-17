@@ -1,5 +1,5 @@
 * Red de Petri
-![RED](RDP.png)
+[[RDP.png]]
 * Clases
 ** Tren
 *** Campos
