@@ -1,0 +1,26 @@
+* Clases
+** Tren
+*** Campos
+    - *Recorrido*: Una lista circular que tiene como nodos las estaciones y los paso a nivel por los que el tren tiene que pasar
+    - *lugares disponibles en maquina/vagon*
+    - *personas viajando en maquina/vagon*
+*** Metodos
+    - *Avanzar*
+    - *getEstacionActual*
+    - *isFull*
+** Estacion
+*** Campos
+    - *numero de estacion* (?
+    - *personas esperando para subir*
+*** Metodos
+    - *subirGente*
+    - *bajarGente*
+    - *isEmpty*
+    - *llegaGente*
+** Paso nivel
+*** Campos
+    - *autos queriendo cruzar*
+    - *barrera*
+*** Metodos
+    - *subir barrera*
+    - *bajar barrera*
