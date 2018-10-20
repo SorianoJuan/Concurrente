@@ -12,7 +12,7 @@ public final class Matrix{
         int row_size = a.length;
         int column_size = a[0].length;
 
-        Integer[row_size][column_size] result;
+        Integer[][] result = new Integer[row_size][column_size];
 
         for(int i=0; i<row_size; i++){
             for(int j=0; i<column_size; j++){
@@ -20,5 +20,10 @@ public final class Matrix{
             }
         }
         return result;
+    }
+
+    public static Integer[][] matmul(Integer[][] a, Integer[][] b){
+        int row_a = a.lenght;
+        int row_b = b.length;
     }
 }
