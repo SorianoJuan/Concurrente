@@ -3,16 +3,20 @@ package concurrency;
 import java.util.ArrayList;
 
 public class PetriNet{
-    private ArrayList<Transition> tlist;
-    private int counter;
-    private int counter_aux;
 
-    public PetriNet(){
-        this.counter = 0;
-        this.counter_aux = this.counter;
-        this.tlist = new ArrayList<Transition>();
-        this.tlist.add(new Transition("Incremento"));
-        this.tlist.add(new Transition("Decremento"));
+    private ArrayList<Transition> tlist;
+
+    private Integer [][] incidence;
+    private Integer [][] marking;
+    private Integer [][] transitions;
+    private Integer [][] policy;
+
+    public PetriNet(String incidenceFile, String markingFile, String transitionsFile, String policyFile){
+        this.incidence = parseFile (incidenceFile);
+        this.marking = parseFile (markingFile);
+        this.transitions = parseFile (transitionsFile);
+        this.policy = parseFile (policyFile);
+        this.tlist = generateTransitionList(incidenceFile);
     }
 
     public ArrayList<Transition> getTransitionList(){
@@ -20,28 +24,48 @@ public class PetriNet{
     }
 
     public int getAmountTransitions(){
-        return 2;
+        return tlist.size();
     }
 
     public boolean isSensibilized(Transition t){
-        return (counter - counter_aux >= 2*t.getId());
+        return (transitions[t.getId()]==1);
     }
 
     public Transition getNextTransition(){
-        if(counter - counter_aux >= 2){
-            return this.tlist.get(1);
-        }else{
-            return this.tlist.get(0);
-        }
+
     }
 
     public void trigger(Transition t){
-        if(t.getId() == 0){
-            this.counter++;
-            System.out.println("Incrementando contador: "+this.counter);
-        }else if(t.getId() == 1){
-            this.counter_aux = --this.counter;
-            System.out.println("Decrementando contador: "+this.counter);
+
+    }
+
+    public Integer[][] parseFile (String fileName){
+        BufferedReader br = new BufferedReader (new FileReader(fileName));
+        String line = br.readLine ();
+        String [] items = line.split(",");
+        int filas = Integer.parseInt (items [0]);
+        int columnas = Integer.parseInt (items [1]);
+        array = new int [filas][columnas];
+        for (int i = 0; i< filas; i++){
+            line = br.readLine ();
+            items = line.split (",");
+            for (int j = 0; j < columnas; j++){
+                array [i][j] = Integer.parseInt (items[j]);
+            }
         }
+        br.close ();
+        return array;
+    }
+
+    private ArrayList<Transition> generateTransitionList (String transitionFile){
+        BufferedReader br = new BufferedReader (new FileReader(transitionFile));
+        String line = br.readLine ();
+        String [] items = line.split(",");
+        transitionList = new ArrayList<Transition>;
+        for (int i = 0; i< items.length(); i++){
+            transitionList.add(new Transition (items[i]));
+        }
+        br.close ();
+        return transitionList;
     }
 }
