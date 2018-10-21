@@ -44,5 +44,21 @@ public final class Matrix{
                 }
             }
         }
+
+        return result;
+    }
+
+    public static Integer[][] transpose(Integer [][] a){
+        int row_amount = a.length;
+        int column_amount = a[0].length;
+        
+        Integer[][] result = Integer[column_amount][row_amount];
+
+        for(int i = 0; i < row_amount; i++){
+            for(int j = 0; j < column_amount; j++){
+                result[j][i] = a[i][j];
+            }
+        }
+        return result;
     }
 }
