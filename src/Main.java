@@ -1,5 +1,3 @@
-package concurrency;
-
 public class Main{
     public static void main(String[] args){
         PetriNet pnet = new PetriNet();

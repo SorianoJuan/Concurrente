@@ -1,8 +1,6 @@
-package concurrency;
-
 public final class Matrix{
     public static Integer[][] sum(Integer[][] a, Integer[][] b){
-        if(a[0].length != b[0].length || a.lenght != b.length){
+        if(a[0].length != b[0].length || a.length != b.length){
             throw new ArithmeticException
                 (
                  "No se puede sumar matrices de diferentes dimensiones."
@@ -23,9 +21,9 @@ public final class Matrix{
     }
 
     public static Integer[][] matmul(Integer[][] a, Integer[][] b){
-        int rowamount_a = a.lenght;
+        int rowamount_a = a.length;
         int rowamount_b = b.length;
-        int columnamount_a = a.lenght;
+        int columnamount_a = a.length;
         int columnamount_b = b.length;
 
         if(columnamount_a != rowamount_b){
@@ -40,7 +38,7 @@ public final class Matrix{
         for(int i = 0; i<rowamount_a; i++){
             for(int j = 0; j<columnamount_b; j++){
                 for(int k = 0; k<columnamount_a; k++){
-                    result[i][j] += a[rowamount_a][k] * b[k][columnamount_b];
+                    result[i][j] += a[i][k] * b[k][j];
                 }
             }
         }
@@ -52,7 +50,7 @@ public final class Matrix{
         int row_amount = a.length;
         int column_amount = a[0].length;
         
-        Integer[][] result = Integer[column_amount][row_amount];
+        Integer[][] result = new Integer[column_amount][row_amount];
 
         for(int i = 0; i < row_amount; i++){
             for(int j = 0; j < column_amount; j++){

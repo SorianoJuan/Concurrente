@@ -1,5 +1,3 @@
-package concurrency;
-
 import java.util.ArrayList;
 
 public class PetriNet{

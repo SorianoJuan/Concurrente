@@ -1,5 +1,3 @@
-package concurrency;
-
 import java.util.concurrent.TimeUnit;
 
 public class Task implements Runnable{
