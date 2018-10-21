@@ -1,7 +1,7 @@
 package main;
 
 public final class Matrix{
-    public static Integer[][] sum(Integer[][] a, Integer[][] b){
+    public static int[][] sum(int[][] a, int[][] b){
         if(a[0].length != b[0].length || a.length != b.length){
             throw new ArithmeticException
                 (
@@ -12,17 +12,17 @@ public final class Matrix{
         int row_amount = a.length;
         int column_amount = a[0].length;
 
-        Integer[][] result = new Integer[row_amount][column_amount];
+        int[][] result = new int[row_amount][column_amount];
 
         for(int i=0; i<row_amount; i++){
-            for(int j=0; i<column_amount; j++){
+            for(int j=0; j<column_amount; j++){
                 result[i][j] = a[i][j] + b[i][j];
             }
         }
         return result;
     }
 
-    public static Integer[][] matmul(Integer[][] a, Integer[][] b){
+    public static int[][] matmul(int[][] a, int[][] b){
         int rowamount_a = a.length;
         int rowamount_b = b.length;
         int columnamount_a = a.length;
@@ -35,7 +35,7 @@ public final class Matrix{
                  );
         }
 
-        Integer[][] result = new Integer[rowamount_a][columnamount_b];
+        int[][] result = new int[rowamount_a][columnamount_b];
 
         for(int i = 0; i<rowamount_a; i++){
             for(int j = 0; j<columnamount_b; j++){
@@ -48,11 +48,11 @@ public final class Matrix{
         return result;
     }
 
-    public static Integer[][] transpose(Integer [][] a){
+    public static int[][] transpose(int[][] a){
         int row_amount = a.length;
         int column_amount = a[0].length;
         
-        Integer[][] result = new Integer[column_amount][row_amount];
+        int[][] result = new int[column_amount][row_amount];
 
         for(int i = 0; i < row_amount; i++){
             for(int j = 0; j < column_amount; j++){
