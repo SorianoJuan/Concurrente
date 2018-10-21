@@ -1,4 +1,4 @@
-package concurrency;
+package main;
 
 public class Transition{
     private static int last_id = 0;
