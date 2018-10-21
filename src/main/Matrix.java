@@ -1,3 +1,5 @@
+package main;
+
 public final class Matrix{
     public static Integer[][] sum(Integer[][] a, Integer[][] b){
         if(a[0].length != b[0].length || a.length != b.length){
