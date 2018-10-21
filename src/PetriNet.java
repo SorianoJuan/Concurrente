@@ -32,11 +32,31 @@ public class PetriNet{
     }
 
     public Transition getNextTransition(){
-
+        Integer [][] aux = new Integer [transitions.length][transitions[0].length];
+        aux = matmul(policy, transitions);
+        int i = 0; 
+        for (i=0; i<aux.length; i++){
+            if (aux[i][0]==1){
+                break;
+            }
+        }
+        Arrays.fill (aux,0);
+        aux[i][0] = 1;
+        aux = matmul(Matrix.transpose(policy),aux);
+        for (i=0; i<aux.length; i++){
+            if (aux[i][0]==1){
+                break;
+            }
+        }
+        return tlist.get(i);
     }
 
     public void trigger(Transition t){
-
+        Integer [t.length][t[0].length] triggeredTransition;
+        Arrays.fill(triggeredTransition, 0);
+        triggeredTransition [t.getId()][0] = 1;
+        this.marking = Matrix.sum(marking, Matrix.matmul(incidence, triggeredTransition));
+        // TODO: actualizar vectores de transiciones
     }
 
     public Integer[][] parseFile (String fileName){
