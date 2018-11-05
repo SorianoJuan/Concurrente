@@ -16,11 +16,11 @@ public class PetriNet{
     private int [][] transitions;
     private int [][] policy;
 
-    public PetriNet(String incidenceFile, String markingFile, String transitionsFile, String policyFile){
-        this.incidence = parseFile (incidenceFile);
-        this.marking = parseFile (markingFile);
-        this.transitions = parseFile (transitionsFile);
-        this.policy = parseFile (policyFile);
+    public PetriNet(String incidenceFile, String markingFile, String transitionsFile, String policyFile) {
+        this.incidence = parseFile(incidenceFile);
+        this.marking = parseFile(markingFile);
+        //this.transitions = parseFile (transitionsFile); Hay que inicializarlo como dios manda
+        this.policy = parseFile(policyFile);
         this.tlist = generateTransitionList(incidenceFile);
     }
 
@@ -69,16 +69,15 @@ public class PetriNet{
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             String line = br.readLine ();
             String [] items = line.split(",");
-            int filas = Integer.parseInt (items [0]);
-            int columnas = Integer.parseInt (items [1]);
-            int [][] array = new int [filas][columnas];
-            for (int i = 0; i< filas; i++){
-                line = br.readLine ();
-                items = line.split (",");
-                for (int j = 0; j < columnas; j++){
-                    array [i][j] = Integer.parseInt (items[j]);
-                }
+            items = Arrays.copyOfRange (items, 1, items.length); //Discarding first empty object
+            int columnas = items.length ;
+            ArrayList<int []> linelist = new ArrayList<> ();
+            while ((line = br.readLine()) != null){
+                items = line.split(",");
+                items = Arrays.copyOfRange (items, 1, items.length); //Discarding first column
+                linelist.add(Arrays.stream(items).mapToInt(Integer::parseInt).toArray());
             }
+            int [][] array = linelist.toArray(new int [linelist.size()][columnas]);
             br.close ();
             return array;
         }
@@ -90,7 +89,6 @@ public class PetriNet{
             System.out.println("Error: Error de entrada/salida");
             System.exit(-1);
         }
-
         return null;
     }
 
@@ -99,6 +97,7 @@ public class PetriNet{
             BufferedReader br = new BufferedReader (new FileReader(transitionFile));
             String line = br.readLine ();
             String [] items = line.split(",");
+            items = Arrays.copyOfRange (items, 1, items.length); //Discarding first empty object
             ArrayList<Transition> transitionList = new ArrayList<>();
             for (int i = 0; i< items.length; i++){
                 transitionList.add(new Transition (items[i]));

@@ -2,7 +2,7 @@ package main;
 
 public class Main{
     public static void main(String[] args){
-        PetriNet pnet = new PetriNet();
+     /*   PetriNet pnet = new PetriNet();
         Monitor mon = new Monitor(pnet);
         Task inc = new Task(pnet.getTransitionList().get(0), mon);
         Task dec = new Task(pnet.getTransitionList().get(1), mon);
@@ -17,6 +17,6 @@ public class Main{
             th_dec.join();
         } catch (InterruptedException e){
             e.printStackTrace();
-        }
+        }*/
     }
 }
