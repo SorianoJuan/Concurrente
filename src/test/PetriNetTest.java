@@ -1,5 +1,5 @@
-package test;
-
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealVector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,10 +19,13 @@ public class PetriNetTest {
 
     @Before
     public void setUp(){
-        petrinet = new PetriNet("/home/torce/Desktop/ProgConcurrente-UNC/includes/incidence.csv",
-                "/home/torce/Desktop/ProgConcurrente-UNC/includes/marking.csv",
-                "/home/torce/Desktop/ProgConcurrente-UNC/includes/transitions.csv",
-                "/home/torce/Desktop/ProgConcurrente-UNC/includes/policy.csv" );
+        petrinet = new PetriNet
+            (
+             "./includes/incidence.csv",
+             "./includes/marking.csv",
+             "./includes/transitions.csv",
+             "./includes/policy.csv"
+             );
         Transition.resetId();
     }
 
@@ -48,7 +51,7 @@ public class PetriNetTest {
                 { 0, 0, 0, 1}
         };
 */
-        assertTrue(Arrays.deepEquals(petrinet.parseFile("/home/torce/Desktop/ProgConcurrente-UNC/includes/incidence.csv"), expectedincidence));
+        assertTrue(Arrays.deepEquals(petrinet.parseFile("./includes/incidence.csv"), expectedincidence));
 
     }
 
@@ -75,9 +78,16 @@ public class PetriNetTest {
     }
 
     @Test
-    public void triggerTest(){
-        assertTrue(true);
-        //TODO: hacer testing de trigger
+    public void generateSensibilizedTransitionVectorTest(){
+        RealVector expected = MatrixUtils.createRealVector(new double[]{1.0, 0.0, 0.0, 0.0});
+        RealVector obtained = petrinet.getSensibilizedTransitionVector();
+        assertEquals(expected, obtained);
     }
+
+    // @Test
+    // public void triggerTest(){
+    //     assertTrue(true);
+    //     //TODO: hacer testing de trigger
+    // }
 
 }
