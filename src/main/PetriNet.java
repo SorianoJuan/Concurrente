@@ -18,22 +18,16 @@ public class PetriNet{
 
     private ArrayList<Transition> tlist;
 
-    private int [][] incidence;
-    private int [][] marking;
-    private int [][] transitions;
-    private RealVector transitionsVector;
-    private RealMatrix incidenceMatrix;
-    private RealVector markingVector;
-    private int [][] policy;
+    private RealVector transitions;
+    private RealVector marking;
+    private RealMatrix incidence;
+    private RealMatrix policy;
 
     public PetriNet(String incidenceFile, String markingFile, String transitionsFile, String policyFile) {
         this.incidence = parseFile(incidenceFile);
-        this.incidenceMatrix = parseFile_new(incidenceFile);
-        this.marking = parseFile(markingFile);
-        this.markingVector = parseFile_new(markingFile).getRowVector(1);
-        this.transitionsVector = this.generateSensibilizedTransitionsVector();
-        //this.transitions = parseFile (transitionsFile); Hay que inicializarlo como dios manda
-        this.policy = parseFile(policyFile);
+        this.marking = parseFile(markingFile).getRowVector(1);
+        this.transitions = this.generateSensibilizedTransitionsVector();
+        this.policy = MatrixUtils.createRealIdentityMatrix(this.transitions.getDimension());
         this.tlist = generateTransitionList(incidenceFile);
     }
 
@@ -46,66 +40,26 @@ public class PetriNet{
     }
 
     public boolean isSensibilized(Transition t){
-        return (transitions[t.getId()][0]==1);
+        return (this.transitions.getEntry(t.getId())==1.);
     }
 
     public Transition getNextTransition(){
-        int [][] aux = new int [transitions.length][transitions[0].length];
-        aux = Matrix.matmul(policy, transitions);
-        int i;
-        for (i=0; i<aux.length; i++){
-            if (aux[i][0]==1){
-                break;
-            }
-        }
-        Arrays.fill (aux,0);
-        aux[i][0] = 1;
-        aux = Matrix.matmul(Matrix.transpose(policy),aux);
-        for (i=0; i<aux.length; i++){
-            if (aux[i][0]==1){
-                break;
-            }
-        }
-        return tlist.get(i);
+        RealVector aux = this.policy.operate(this.transitions);
+        int i = aux.getMaxIndex(); //TODO: revisar que siempre devuelva el primero
+        aux.set(0.);
+        aux.setEntry(i, 1.);
+        aux = this.policy.transpose().operate(aux);
+        return tlist.get(aux.getMaxIndex());
     }
 
     public void trigger(Transition t){
-        int [][] triggeredTransition = new int [transitions.length][transitions[0].length];
-        Arrays.fill(triggeredTransition, 0);
-        triggeredTransition [t.getId()][0] = 1;
-        this.marking = Matrix.sum(marking, Matrix.matmul(incidence, triggeredTransition));
-        // TODO: actualizar vectores de transiciones
+        RealVector triggeredTransition = new ArrayRealVector(this.transitions.getDimension());
+        triggeredTransition.setEntry(t.getId(), 1.);
+        this.marking = this.marking.add(this.incidence.operate(triggeredTransition));
+        this.transitions = this.generateSensibilizedTransitionsVector();
     }
 
-    public int [][] parseFile (String fileName){
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
-            String line = br.readLine ();
-            String [] items = line.split(",");
-            items = Arrays.copyOfRange (items, 1, items.length); //Discarding first empty object
-            int columnas = items.length ;
-            ArrayList<int []> linelist = new ArrayList<> ();
-            while ((line = br.readLine()) != null){
-                items = line.split(",");
-                items = Arrays.copyOfRange (items, 1, items.length); //Discarding first column
-                linelist.add(Arrays.stream(items).mapToInt(Integer::parseInt).toArray());
-            }
-            int [][] array = linelist.toArray(new int [linelist.size()][columnas]);
-            br.close ();
-            return array;
-        }
-        catch(FileNotFoundException e){
-            System.out.println("Error: Archivo "+fileName+" no encontrado.");
-            System.exit(-1);
-        }
-        catch(IOException e){
-            System.out.println("Error: Error de entrada/salida");
-            System.exit(-1);
-        }
-        return null;
-    }
-
-    public RealMatrix parseFile_new (String fileName){
+    public RealMatrix parseFile (String fileName){
         try{
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             String line = br.readLine ();
@@ -157,15 +111,13 @@ public class PetriNet{
         return null;
     }
 
-    public RealVector getSensibilizedTransitionVector(){
-        return this.transitionsVector;
-    }
     private RealVector generateSensibilizedTransitionsVector(){
-        RealVector result = new ArrayRealVector(this.incidenceMatrix.getColumnDimension());
-        RealVector ones = new ArrayRealVector(this.incidenceMatrix.getColumnDimension(), 1.0);
-        RealMatrix auxMatrix = this.markingVector.outerProduct(ones);
+        RealVector result = new ArrayRealVector(this.incidence.getColumnDimension());
+        RealVector ones = new ArrayRealVector(this.incidence.getColumnDimension(), 1.0);
+        RealMatrix auxMatrix = this.marking.outerProduct(ones);
+
         Product prod = new Product();
-        auxMatrix = auxMatrix.add(this.incidenceMatrix);
+        auxMatrix = auxMatrix.add(this.incidence);
         for(int i=0; i<auxMatrix.getColumnDimension(); i++){
             RealVector auxVector = auxMatrix.getColumnVector(i);
             auxVector.mapToSelf(new StepFunction(new double[]{-1., 0.}, new double[]{0., 1.}));
@@ -173,5 +125,17 @@ public class PetriNet{
         }
 
         return result;
+    }
+
+    public RealVector getSensibilizedTransitionVector(){
+        return this.transitions;
+    }
+
+    public RealVector getMarkingVector(){
+        return this.marking;
+    }
+
+    public RealVector getTransitionsVector(){
+        return this.transitions;
     }
 }
