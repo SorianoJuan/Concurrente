@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,8 +14,6 @@ import main.Transition ;
 
 public class PetriNetTest {
     private PetriNet petrinet;
-
-    private ArrayList<Transition> testedlist;
 
     @Before
     public void setUp(){
@@ -59,7 +56,7 @@ public class PetriNetTest {
 
     @Test
     public void generateTransitionListTest(){
-        testedlist = new ArrayList<>();
+        ArrayList<Transition> testedlist = new ArrayList<>();
 
         testedlist.add(new Transition("Producir1"));
         testedlist.add(new Transition("Consumir1"));
@@ -105,6 +102,12 @@ public class PetriNetTest {
 
         assertEquals(expected_marking, petrinet.getMarkingVector());
         assertEquals(expected_transitions, petrinet.getTransitionsVector());
+    }
+
+    @Test
+    public void checkPInvariantTest(){
+        assertTrue(this.petrinet.checkPInvariant(new int[]{1,5}, 5));
+        assertTrue(this.petrinet.checkPInvariant(new int[]{1,0}, 2));
     }
 
 }
