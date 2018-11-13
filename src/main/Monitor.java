@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,6 +36,18 @@ public class Monitor{
 
     public void setVerboseLevel(int lvl){
         this.verbose = lvl;
+    }
+
+    public boolean checkNet(ArrayList<PInvariant> invList){
+        this.lock.lock();
+        for(PInvariant inv: invList){
+            if(!this.PNet.checkPInvariant(inv)){
+                this.lock.unlock();
+                throw new VerifyError("No se cumple con un invariante");
+            }
+        }
+        this.lock.unlock();
+        return this.count >= 0;
     }
 
     public boolean exec(Transition t){
