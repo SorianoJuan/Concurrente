@@ -138,4 +138,8 @@ public class PetriNet{
     public RealVector getTransitionsVector(){
         return this.transitions;
     }
+
+    public RealMatrix getIncidenceMatrix(){
+        return this.incidence;
+    }
 }
