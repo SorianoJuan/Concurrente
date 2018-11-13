@@ -43,6 +43,7 @@ public class Monitor{
         // reciben signal tienen que pelear por el lock
         // con los threads de la cola de entrada
         this.lock.lock();
+        // TODO: [!] Pensar bien este if, posible problema de concurrencia
         if(this.count < 0){
             for(Condition cond:ConditionQueue){
                 cond.signalAll();
@@ -61,13 +62,6 @@ public class Monitor{
                 } catch (InterruptedException e){
                     e.printStackTrace();
                 }
-            }
-            if(this.count < 0){
-                for(Condition cond:ConditionQueue){
-                    cond.signalAll();
-                }
-                this.lock.unlock();
-                return false;
             }
             this.PNet.trigger(t);
             if(this.verbose > 0){
