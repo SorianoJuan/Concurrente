@@ -30,9 +30,9 @@ public class Main{
         }
 
         if(
-           pnet.checkPInvariant(new int[]{0,2}, 1) &&
-           pnet.checkPInvariant(new int[]{1,3}, 1) &&
-           pnet.checkPInvariant(new int[]{4,5}, 4)
+           pnet.checkPInvariant(new PInvariant(new int[]{0,2}, 1)) &&
+           pnet.checkPInvariant(new PInvariant(new int[]{1,3}, 1)) &&
+           pnet.checkPInvariant(new PInvariant(new int[]{4,5}, 4))
            ){
             System.out.println("Todo piola amiguero");
         }
@@ -51,9 +51,9 @@ public class Main{
         }
 
         if(
-           pnet.checkPInvariant(new int[]{0,2}, 1) &&
-           pnet.checkPInvariant(new int[]{1,3}, 1) &&
-           pnet.checkPInvariant(new int[]{4,5}, 4)
+           pnet.checkPInvariant(new PInvariant(new int[]{0,2}, 1)) &&
+           pnet.checkPInvariant(new PInvariant(new int[]{1,3}, 1)) &&
+           pnet.checkPInvariant(new PInvariant(new int[]{4,5}, 4))
            ){
             System.out.println("Todo piola amiguero");
         }

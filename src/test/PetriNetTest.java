@@ -1,3 +1,4 @@
+import main.PInvariant;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
@@ -106,8 +107,10 @@ public class PetriNetTest {
 
     @Test
     public void checkPInvariantTest(){
-        assertTrue(this.petrinet.checkPInvariant(new int[]{1,5}, 5));
-        assertTrue(this.petrinet.checkPInvariant(new int[]{1,0}, 2));
+        PInvariant inv1 = new PInvariant(new int[]{1,5}, 5);
+        PInvariant inv2 = new PInvariant(new int[]{1,0}, 2);
+        assertTrue(this.petrinet.checkPInvariant(inv1));
+        assertTrue(this.petrinet.checkPInvariant(inv2));
     }
 
 }

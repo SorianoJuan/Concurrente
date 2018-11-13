@@ -127,7 +127,9 @@ public class PetriNet{
         return result;
     }
 
-    public boolean checkPInvariant(int[] plist, int value){
+    public boolean checkPInvariant(PInvariant inv){
+        int[] plist = inv.getPlaceArray();
+        int value = inv.getValue();
         RealVector vaux = new ArrayRealVector(this.incidence.getRowDimension());
         Arrays.stream(plist).forEach(i -> vaux.setEntry(i, 1.));
         return value == (int) vaux.dotProduct(this.marking);
