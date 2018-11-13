@@ -1,27 +1,29 @@
 package main;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class Task implements Runnable{
     private Monitor mon;
-    private Transition t;
+    private Transition[] tarray;
+    private boolean keepGoing;
 
-    public Task(Transition t, Monitor mon){
-        this.t = t;
+    public Task(int[] indexs, PetriNet pnet, Monitor mon){
+        this.tarray = Arrays.stream(indexs).mapToObj(pnet.getTransitionList()::get).toArray(Transition[]::new);
         this.mon = mon;
+        this.keepGoing = true;
+    }
+
+    public Transition[] getTransitionArray(){
+        return this.tarray;
     }
 
     @Override
     public void run(){
-        for(int i=0; i<20; i++){
-            try{
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e){
-                e.printStackTrace();
+        while(this.keepGoing){
+            for(Transition t: this.tarray){
+                this.keepGoing = this.mon.exec(t);
             }
-
-            System.out.println("Tratando de disparar transicion: "+this.t.getId());
-            this.mon.exec(this.t);
         }
     }
 }
