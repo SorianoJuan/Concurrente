@@ -22,10 +22,10 @@ public class PetriNetTest {
     public void setUp(){
         petrinet = new PetriNet
             (
-             "./includes/incidence.csv",
-             "./includes/marking.csv",
-             "./includes/transitions.csv",
-             "./includes/policy.csv"
+             "./includes/test/incidence.csv",
+             "./includes/test/marking.csv",
+             "./includes/test/transitions.csv",
+             "./includes/test/policy.csv"
              );
         Transition.resetId();
     }
@@ -53,7 +53,7 @@ public class PetriNetTest {
                 { 0, 0, 0, 1}
         };
 */
-        assertEquals(petrinet.parseFile("./includes/incidence.csv"), expectedincidence);
+        assertEquals(petrinet.getIncidenceMatrix(), expectedincidence);
 
     }
 
