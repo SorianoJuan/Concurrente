@@ -14,7 +14,7 @@ public class Monitor{
     private Condition[] ConditionQueue;
     // private Condition CourtesyQueue;
 
-    private Lock lock;
+    private ReentrantLock lock;
 
     public Monitor(PetriNet PNet){
         this.PNet = PNet;
