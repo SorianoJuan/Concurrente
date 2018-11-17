@@ -24,7 +24,8 @@ public class Monitor{
         this.verbose = 0;
 
         this.ConditionQueue = new Condition[this.PNet.getAmountTransitions()];
-        for(int i = 0; i < this.PNet.getAmountTransitions(); i++) this.ConditionQueue[i] = lock.newCondition();
+        for(int i = 0; i < this.PNet.getAmountTransitions(); i++)
+            this.ConditionQueue[i] = lock.newCondition();
 
         // this.CourtesyQueue = lock.newCondition();
     }
@@ -56,14 +57,6 @@ public class Monitor{
         // reciben signal tienen que pelear por el lock
         // con los threads de la cola de entrada
         this.lock.lock();
-        // TODO: [!] Pensar bien este if, posible problema de concurrencia
-        if(this.count < 0){
-            for(Condition cond:ConditionQueue){
-                cond.signalAll();
-            }
-            this.lock.unlock();
-            return false;
-        }
         try{
             Transition next_t;
 
@@ -73,19 +66,31 @@ public class Monitor{
                 try{
                     this.ConditionQueue[t.getId()].await();
                 } catch (InterruptedException e){
-                    e.printStackTrace();
+                    if(this.verbose > 1)
+                        System.out.println
+                            ("Msg From: "+Thread.currentThread().getName()+
+                             "\nThread interrumpido");
+                    return false;
                 }
+            }
+            this.op.run();
+            if(this.count < 0){
+                if(this.verbose > 1)
+                    System.out.println
+                        ("Msg From: "+Thread.currentThread().getName()+
+                         "\nInterrumpiendo threads");
+                Thread.currentThread().getThreadGroup().interrupt();
+                return false;
             }
             this.PNet.trigger(t);
             if(this.verbose > 0){
                 System.out.println("Transicion disparada: "+t.getName());
             }
-            this.op.run();
             next_t = this.PNet.getNextTransition();
             this.ConditionQueue[next_t.getId()].signal();
+            return true;
         }finally{
-            this.lock.unlock();
+            if(this.lock.isHeldByCurrentThread())this.lock.unlock();
         }
-        return true;
     }
 }
