@@ -24,6 +24,7 @@ public class Task implements Runnable{
         while(keepGoing){
             for(Transition t: this.tarray){
                 keepGoing = this.mon.exec(t);
+                if(!keepGoing) break;
             }
         }
         if(verbose > 0)
