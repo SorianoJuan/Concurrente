@@ -39,7 +39,7 @@ public class Monitor{
         this.verbose = lvl;
     }
 
-    public boolean checkNet(ArrayList<PInvariant> invList){
+    public boolean checkNet(ArrayList<PInvariant> invList) throws VerifyError{
         this.lock.lock();
         for(PInvariant inv: invList){
             if(!this.PNet.checkPInvariant(inv)){
