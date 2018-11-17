@@ -7,25 +7,52 @@ public class InvariantChecker implements Runnable{
     private ArrayList<PInvariant> invList;
     private int time;
     private Monitor mon;
-    private boolean keepGoing;
+    private int verbose;
 
     public InvariantChecker(Monitor mon, int timems, PInvariant...invs){
         this.invList = new ArrayList<>();
         this.time = timems;
         this.mon = mon;
-        this.keepGoing = true;
         Collections.addAll(invList, invs);
+    }
+
+    public void setVerboseLevel(int lvl){
+        this.verbose = lvl;
     }
 
     @Override
     public void run(){
-        while(this.keepGoing){
+        boolean keepGoing = true;
+        while(keepGoing){
             try{
                 Thread.sleep(time);
             } catch(InterruptedException e){
                 e.printStackTrace();
             }
-            this.keepGoing = mon.checkNet(this.invList);
+            try{
+                keepGoing = mon.checkNet(this.invList);
+            } catch(VerifyError e){
+                System.out.println
+                    (
+                     "Msg From: "+Thread.currentThread().getName()+
+                     "\nERROR: Algun invariante no cumple la condicion"
+                     );
+                this.mon.stopAfterTransitionsFired(0);
+                break;
+
+            };
+            if(this.verbose > 1)
+                System.out.println
+                    (
+                     "Msg From: "+Thread.currentThread().getName()+
+                     "\nInvariantes correctos"
+                     );
         }
+        if(this.verbose > 0)
+            System.out.println
+                (
+                 "Msg From: "+Thread.currentThread().getName()+
+                 "\nThread terminado"
+                 );
     }
 }
