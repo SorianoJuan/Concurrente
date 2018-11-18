@@ -22,8 +22,8 @@ public class PetriNetTest {
             (
              "./includes/test/incidence.csv",
              "./includes/test/marking.csv",
-             "./includes/test/transitions.csv",
-             "./includes/test/policy.csv"
+             "./includes/test/inhibition.csv",
+             ""
              );
         Transition.resetId();
     }
