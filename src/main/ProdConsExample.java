@@ -1,6 +1,6 @@
 package main;
 
-public class Main{
+public class ProdConsExample{
     public static void main(String[] args){
         PetriNet pnet = new PetriNet
             (
