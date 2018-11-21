@@ -21,11 +21,21 @@ public class PetriNet{
     private RealVector transitions;
     private RealVector marking;
     private RealMatrix incidence;
+    private RealMatrix inhibition;
     private RealMatrix policy;
 
-    public PetriNet(String incidenceFile, String markingFile, String transitionsFile, String policyFile) {
+    public PetriNet(String incidenceFile, String markingFile, String inhibitionFile, String policyFile) {
         this.incidence = parseFile(incidenceFile);
         this.marking = parseFile(markingFile).getRowVector(1);
+        if(inhibitionFile != null && !inhibitionFile.isEmpty()){
+            this.inhibition = parseFile(inhibitionFile);
+        }else{
+            this.inhibition = MatrixUtils.createRealMatrix
+                (
+                 this.incidence.getRowDimension(),
+                 this.incidence.getColumnDimension()
+                 );
+        }
         this.transitions = this.generateSensibilizedTransitionsVector();
         this.policy = MatrixUtils.createRealIdentityMatrix(this.transitions.getDimension());
         this.tlist = generateTransitionList(incidenceFile);
@@ -112,16 +122,60 @@ public class PetriNet{
     }
 
     private RealVector generateSensibilizedTransitionsVector(){
+        /*
+         * Este codigo seria mucho mas lindo si esta libreria
+         * tuviera mas operaciones matriciales. Pero solo tiene
+         * las funciones necesarias en vectores, asi que se trabaja
+         * columna a columna en un bucle.
+         *
+         * La idea es la siguiente:
+         *
+         * 1)Se arma una matriz extendiendo el vector de marcado
+         * hasta que tenga una dimension = matriz de incidencia
+         * 2) Se suman ambas matrices, si alguna columna de
+         * la matriz resultante tiene algun valor negativo quiere
+         * decir que que no habian suficientes tokens para disparar
+         * esa transicion. Entonces se mapean todos los valores < 0
+         * a 0 y todos los valores >= 0 a 1 y se reducen las columnas
+         * de la matriz haciendo producto entre sus elementos, el vector
+         * que se obtiene indica con un 1 las transiciones que se pueden
+         * disparar.
+         *
+         * Inhibidores:
+         * 1) Se extiende el vector de marcado igual que en el caso anterior
+         * pero ahora todos los valores > 0 se mapean a 1.
+         * 2) Se multiplica elemento a elemento esa matriz con la matriz de
+         * inhibidores (C).
+         * 3) Se toma la matriz resultado de la suma y mapeo explicada para el
+         * caso sin inhibidores (B) y se calcula A = B*(1-C)
+         * 4) Se hace la misma reduccion explicada mas arriba y se optiene el
+         * vector de transiciones que se pueden disparar.
+         */
+        Product prod = new Product();
+
+        StepFunction negToZeroElseOne = new StepFunction(new double[]{-1., 0.}, new double[]{0., 1.});
+        StepFunction PosToOne = new StepFunction(new double[]{0., 1}, new double[]{0., 1.});
+
+        RealVector oneCaseMarking;
+        RealVector inhibitionMask;
         RealVector result = new ArrayRealVector(this.incidence.getColumnDimension());
         RealVector ones = new ArrayRealVector(this.incidence.getColumnDimension(), 1.0);
-        RealMatrix auxMatrix = this.marking.outerProduct(ones);
 
-        Product prod = new Product();
-        auxMatrix = auxMatrix.add(this.incidence);
-        for(int i=0; i<auxMatrix.getColumnDimension(); i++){
-            RealVector auxVector = auxMatrix.getColumnVector(i);
-            auxVector.mapToSelf(new StepFunction(new double[]{-1., 0.}, new double[]{0., 1.}));
-            result.setEntry(i, prod.evaluate(auxVector.toArray(), 0, auxVector.getDimension()));
+        RealMatrix ExtendedMarking = this.marking.outerProduct(ones);
+        RealVector MappedMarking = this.marking.map(PosToOne);
+
+        RealMatrix allCasesMarking = ExtendedMarking.add(this.incidence);
+
+        ones = new ArrayRealVector(this.incidence.getRowDimension(), 1.);
+        for(int i=0; i<this.incidence.getColumnDimension(); i++){
+            oneCaseMarking = allCasesMarking.getColumnVector(i);
+            oneCaseMarking.mapToSelf(negToZeroElseOne);
+
+            inhibitionMask = MappedMarking.ebeMultiply(this.inhibition.getColumnVector(i));
+
+            oneCaseMarking = oneCaseMarking.ebeMultiply(ones.subtract(inhibitionMask));
+
+            result.setEntry(i, prod.evaluate(oneCaseMarking.toArray(), 0, oneCaseMarking.getDimension()));
         }
 
         return result;
@@ -149,5 +203,5 @@ public class PetriNet{
 
     public RealMatrix getIncidenceMatrix(){
         return this.incidence;
-    }
+   }
 }

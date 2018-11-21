@@ -18,8 +18,8 @@ public class TaskTest{
             (
              "./includes/test/incidence.csv",
              "./includes/test/marking.csv",
-             "./includes/test/transitions.csv",
-             "./includes/test/policy.csv"
+             "",
+             ""
              );
         this.mon = new Monitor(this.pnet);
         Transition.resetId();
