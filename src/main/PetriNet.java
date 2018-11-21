@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.Callable;
 
 public class PetriNet{
 
@@ -27,6 +29,9 @@ public class PetriNet{
     private RealMatrix incidence;
     private RealMatrix inhibition;
     private RealMatrix policy;
+
+    private Random rand;
+    private Callable<Transition> nextTransitionMethod;
 
     public PetriNet(String incidenceFile, String markingFile, String inhibitionFile, String timeFile, String policyFile) {
         this.incidence = parseFile(incidenceFile);
@@ -54,6 +59,15 @@ public class PetriNet{
                  new ArrayRealVector(this.intervals.getRowDimension(), Double.MAX_VALUE)
                  );
         }
+        if(policyFile != null && !policyFile.isEmpty()){
+            this.policy = parseFile(policyFile);
+            this.rand = null;
+            this.nextTransitionMethod = this::getNextPriorityTransition;
+        }else{
+            this.policy = null;
+            this.rand = new Random();
+            this.nextTransitionMethod = this::getNextRandomTransition;
+        }
         this.transitions = this.generateSensibilizedTransitionsVector();
         this.prev_transitions = new ArrayRealVector(this.transitions.getDimension());
         this.timestamps = new ArrayRealVector(this.transitions.getDimension(), (double)System.currentTimeMillis());
@@ -77,6 +91,28 @@ public class PetriNet{
     }
 
     public Transition getNextTransition(){
+        Transition t = null;
+        try {
+            t = this.nextTransitionMethod.call();
+        } catch(Exception e){
+            System.out.println("Error: Error de entrada/salida");
+            System.exit(-1);
+        }
+        return t;
+    }
+
+    private Transition getNextRandomTransition(){
+        RealVector readyTransitions = this.getReadyTransitionsVector();
+        int dim = readyTransitions.getDimension();
+        int r=0;
+        for(int i = 0; i < dim; i++){
+            r = this.rand.nextInt(dim);
+            if(readyTransitions.getEntry(r) == 1) break;
+        }
+        return this.tlist.get(r);
+    }
+
+    private Transition getNextPriorityTransition(){
         RealVector aux = this.policy.operate(this.getReadyTransitionsVector());
         int i;
         for(i = 0; i<aux.getDimension(); i++){
