@@ -23,7 +23,7 @@ public class Task implements Runnable{
         for(String name: names){
             auxTlist.add
                 (completeTlist.stream() .filter(i -> name.equals(i.getName()))
-                 .findFirst().orElse(null)
+                 .findFirst().orElseThrow(IllegalArgumentException::new)
                  );
         }
         this.tarray = auxTlist.toArray(new Transition[0]);
