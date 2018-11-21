@@ -6,9 +6,9 @@ public class Main{
     public static void main(String[] args){
         PetriNet pnet = new PetriNet
             (
-             "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_incidence.csv",
-             "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_marking.csv",
-             "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_inhibitor.csv",
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_incidence.csv",
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_marking.csv",
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_inhibitor.csv",
              "",
              ""
              );
@@ -25,43 +25,102 @@ public class Main{
              );
         check.setVerboseLevel(10);
 
-        // Task tren = new Task(new int[]{3, 7, 8, 5, 10, 17}, pnet, mon);
         ArrayList<Task> TaskList = new ArrayList<>();
 
         TaskList.add(new Task
-            (
-             new String[]{"TrenSeVaDeA", "T1", "T2", "T0", "T3", "T7"},
-             pnet,
-             mon,
-             "tren "
-             ));
+                     (
+                      new String[] {
+                          "BAJABAR_A",
+                          "LEVANTABAR_A",
+                          "LLEGATREN_B",
+                          "SALETREN_B",
+                          "LLEGATREN_C",
+                          "SALETREN_C",
+                          "BAJARBAR_C",
+                          "LEVANTARBAR_C",
+                          "TREN_LLEGANDO_D",
+                          "SALETREN_D",
+                          "LLEGATREN_A",
+                          "SALETREN_A"
+                      },
+                      pnet,
+                      mon,
+                      "tren"
+                      ));
 
         //No deberia ser un solo thread
         TaskList.add(new Task
-            (
-             new String[]{"llegaauto_A", "pasonivel_auto", "sevaauto_A"},
-             pnet,
-             mon,
-             "autos"
-             ));
+                     (
+                      new String[]{
+                          "LLEGA_AUTO_A",
+                          "AUTO_CRUZA_A",
+                          "AUTO_SE_VA_A"
+                      },
+                      pnet,
+                      mon,
+                      "auto A"
+                      ));
 
+        //No deberia ser un solo thread
+        TaskList.add(new Task
+                     (
+                      new String[]{
+                          "LLEGA_AUTO_B",
+                          "AUTO_CRUZA_B",
+                          "AUTO_SE_VA_B"
+                      },
+                      pnet,
+                      mon,
+                      "auto B"
+                      ));
+        
         //Estacion A
-        TaskList.add(new Task(new String[]{"llegagente_A"}, pnet, mon, "LlegaGenteA"));
-        TaskList.add(new Task(new String[]{"subirMAQ"}, pnet, mon, "subeGenteMaqA"));
-        TaskList.add(new Task(new String[]{"subirVAG"}, pnet, mon, "subeGenteVagA"));
-        TaskList.add(new Task(new String[]{"bajarMAQ"}, pnet, mon, "bajaGenteMaqA"));
-        TaskList.add(new Task(new String[]{"bajarVAG"}, pnet, mon, "bajaGenteVagA"));
-        TaskList.add(new Task(new String[]{"T10"}, pnet, mon, "noMasGenteA"));
-        TaskList.add(new Task(new String[]{"T17"}, pnet, mon, "noMasLugarA"));
+        TaskList.add(new Task(new String[]{"LLEGAGENTE_A"}, pnet, mon, "LlegaGenteA"));
+        TaskList.add(new Task(new String[]{"SUBIRMAQ"}, pnet, mon, "subeGenteMaqA"));
+        TaskList.add(new Task(new String[]{"SUBIRVAG"}, pnet, mon, "subeGenteVagA"));
+        TaskList.add(new Task(new String[]{"BAJARMAQ"}, pnet, mon, "bajaGenteMaqA"));
+        TaskList.add(new Task(new String[]{"BAJARVAG"}, pnet, mon, "bajaGenteVagA"));
+        TaskList.add(new Task(new String[]{"!GENTE_A"}, pnet, mon, "noMasGenteA"));
+        TaskList.add(new Task(new String[]{"LLENO_A"}, pnet, mon, "noMasLugarA"));
+        TaskList.add(new Task(new String[]{"10SEG_A"}, pnet, mon, "10SEG_A"));
 
         //Estacion B
-        TaskList.add(new Task(new String[]{"T4"}, pnet, mon, "LlegaGenteB"));
-        TaskList.add(new Task(new String[]{"T5"}, pnet, mon, "subeGenteMaqB"));
-        TaskList.add(new Task(new String[]{"T6"}, pnet, mon, "subeGenteVagB"));
-        TaskList.add(new Task(new String[]{"T8"}, pnet, mon, "bajaGenteMaqB"));
-        TaskList.add(new Task(new String[]{"T9"}, pnet, mon, "bajaGenteVagB"));
-        TaskList.add(new Task(new String[]{"T12"}, pnet, mon, "noMasGenteB"));
-        TaskList.add(new Task(new String[]{"T11"}, pnet, mon, "noMasLugarB"));
+        TaskList.add(new Task(new String[]{"LLEGAGENTE_B"}, pnet, mon, "LlegaGenteB"));
+        TaskList.add(new Task(new String[]{"SUBEMAQ_B"}, pnet, mon, "subeGenteMaqB"));
+        TaskList.add(new Task(new String[]{"SUBEVAG_B"}, pnet, mon, "subeGenteVagB"));
+        TaskList.add(new Task(new String[]{"BAJAMAQ_B"}, pnet, mon, "bajaGenteMaqB"));
+        TaskList.add(new Task(new String[]{"BAJAVAG_B"}, pnet, mon, "bajaGenteVagB"));
+        TaskList.add(new Task(new String[]{"!GENTE_B"}, pnet, mon, "noMasGenteB"));
+        TaskList.add(new Task(new String[]{"LLENO_B"}, pnet, mon, "noMasLugarB"));
+        TaskList.add(new Task(new String[]{"10SEG_B"}, pnet, mon, "10SEG_B"));
+
+        //Estacion C
+        TaskList.add(new Task(new String[]{"LLEGAGENTE_C"}, pnet, mon, "LlegaGenteC"));
+        TaskList.add(new Task(new String[]{"SUBEMAQ_C"}, pnet, mon, "subeGenteMaqC"));
+        TaskList.add(new Task(new String[]{"SUBEVAG_C"}, pnet, mon, "subeGenteVagC"));
+        TaskList.add(new Task(new String[]{"BAJAMAQ_C"}, pnet, mon, "bajaGenteMaqC"));
+        TaskList.add(new Task(new String[]{"BAJAVAG_C"}, pnet, mon, "bajaGenteVagC"));
+        TaskList.add(new Task(new String[]{"!GENTE_C"}, pnet, mon, "noMasGenteC"));
+        TaskList.add(new Task(new String[]{"LLENO_C"}, pnet, mon, "noMasLugarC"));
+        TaskList.add(new Task(new String[]{"10SEG_C"}, pnet, mon, "10SEG_C"));
+
+        //Estacion D
+        TaskList.add(new Task(new String[]{"LLEGAGENTE_D"}, pnet, mon, "LlegaGenteD"));
+        TaskList.add(new Task(new String[]{"SUBEMAQ_D"}, pnet, mon, "subeGenteMaqD"));
+        TaskList.add(new Task(new String[]{"SUBEVAG_D"}, pnet, mon, "subeGenteVagD"));
+        TaskList.add(new Task(new String[]{"BAJAMAQ_D"}, pnet, mon, "bajaGenteMaqD"));
+        TaskList.add(new Task(new String[]{"BAJAVAG_D"}, pnet, mon, "bajaGenteVagD"));
+        TaskList.add(new Task(new String[]{"!GENTE_D"}, pnet, mon, "noMasGenteD"));
+        TaskList.add(new Task(new String[]{"LLENO_D"}, pnet, mon, "noMasLugarD"));
+        TaskList.add(new Task(new String[]{"10SEG_D"}, pnet, mon, "10SEG_D"));
+
+        //OTROS
+        TaskList.add(new Task(new String[]{"SUBIR_GENTE_MAQ"}, pnet, mon, "subeMaq"));
+        TaskList.add(new Task(new String[]{"SUBIR_GENTE_VAG"}, pnet, mon, "subeVag"));
+        TaskList.add(new Task(new String[]{"BAJAR_GENTE_MAQ"}, pnet, mon, "bajaMaq"));
+        TaskList.add(new Task(new String[]{"BAJAR_GENTE_VAG"}, pnet, mon, "bajaVag"));
+        
+
 
         ThreadGroup tg = new ThreadGroup("Task Threads");
 
@@ -74,12 +133,12 @@ public class Main{
         }
 
         Thread th_check = new Thread(check, "CheckerThread");
-        th_check.start();
+        //th_check.start();
 
         try{
             for(Thread th: ThreadList)
                 th.join();
-            th_check.join();
+            //th_check.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
