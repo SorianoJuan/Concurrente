@@ -9,7 +9,7 @@ public class Main{
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_incidence.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_marking.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_inhibitor.csv",
-             "",
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_time.csv",
              ""
              );
         Monitor mon = new Monitor(pnet);
@@ -38,7 +38,7 @@ public class Main{
                           "SALETREN_C",
                           "BAJARBAR_C",
                           "LEVANTARBAR_C",
-                          "TREN_LLEGANDO_D",
+                          "LLEGATREN_D",
                           "SALETREN_D",
                           "LLEGATREN_A",
                           "SALETREN_A"
