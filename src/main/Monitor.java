@@ -60,7 +60,7 @@ public class Monitor{
         try{
             Transition next_t;
 
-            while(!this.PNet.isSensibilized(t)){
+            while(!this.PNet.isReady(t)){
                 next_t = this.PNet.getNextTransition();
                 this.ConditionQueue[next_t.getId()].signal();
                 try{
