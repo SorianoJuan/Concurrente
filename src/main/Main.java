@@ -9,6 +9,7 @@ public class Main{
              "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_incidence.csv",
              "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_marking.csv",
              "./includes/2_estaciones_sintiempo/2_estaciones_sintiempo_inhibitor.csv",
+             "",
              ""
              );
         Monitor mon = new Monitor(pnet);

@@ -23,6 +23,7 @@ public class PetriNetTest {
              "./includes/test/incidence.csv",
              "./includes/test/marking.csv",
              "./includes/test/inhibition.csv",
+             "",
              ""
              );
         Transition.resetId();
@@ -86,6 +87,11 @@ public class PetriNetTest {
 
     @Test
     public void getNextTransitionTest(){
+        try {
+            Thread.sleep(10);
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
         //TODO: hacer un test con politica custom
         Transition expected = petrinet.getTransitionList().get(0);
         Transition obtained = petrinet.getNextTransition();
