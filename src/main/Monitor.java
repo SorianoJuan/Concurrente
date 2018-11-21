@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -60,11 +61,12 @@ public class Monitor{
         try{
             Transition next_t;
 
-            while(!this.PNet.isSensibilized(t)){
+            while(!this.PNet.isReady(t)){
                 next_t = this.PNet.getNextTransition();
                 this.ConditionQueue[next_t.getId()].signal();
                 try{
-                    this.ConditionQueue[t.getId()].await();
+                    this.ConditionQueue[t.getId()].await
+                        (this.PNet.getRemainingTime(t), TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e){
                     if(this.verbose > 1)
                         System.out.println
