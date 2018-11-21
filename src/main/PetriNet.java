@@ -46,7 +46,12 @@ public class PetriNet{
                  );
         }
         if(timeFile != null && !timeFile.isEmpty()){
-            this.intervals = parseFile(timeFile);
+            this.intervals = parseFile(timeFile).transpose();
+
+            this.intervals = this.intervals.scalarMultiply((double)PetriNet.MULTIPLIER);
+            for(int i=0; i<this.intervals.getRowDimension(); i++)
+                if(this.intervals.getEntry(i, 1)<0)
+                    this.intervals.setEntry(i, 1, Double.MAX_VALUE);
         }else{
             this.intervals = MatrixUtils.createRealMatrix
                 (
@@ -74,6 +79,8 @@ public class PetriNet{
         this.policy = MatrixUtils.createRealIdentityMatrix(this.transitions.getDimension());
         this.tlist = generateTransitionList(incidenceFile);
     }
+
+    public static final int MULTIPLIER = 1000;
 
     public ArrayList<Transition> getTransitionList(){
         return this.tlist;
@@ -130,6 +137,7 @@ public class PetriNet{
         this.marking = this.marking.add(this.incidence.operate(triggeredTransition));
         this.prev_transitions = this.transitions;
         this.transitions = this.generateSensibilizedTransitionsVector();
+        this.timestamps.setEntry(t.getId(), System.currentTimeMillis());
         this.updateTimeStamps();
     }
 
@@ -181,6 +189,13 @@ public class PetriNet{
             System.exit(-1);
         }
         return null;
+    }
+
+    public long getRemainingTime(Transition t){
+        int index = t.getId();
+        double now = (double)System.currentTimeMillis();
+        double transcurredTime = now - this.timestamps.getEntry(index);
+        return (long)(this.intervals.getEntry(index, 0) - transcurredTime);
     }
 
     private void updateTimeStamps(){
