@@ -1,0 +1,25 @@
+t_inv_tren = {0:{'BAJABAR_A':1},
+			  1:{'LEVANTABAR_A':2},
+			  2:{'LLEGATREN_B':3}},
+			  3:{'LLEGATREN_B':4}},
+			  4:{'SALETREN_B':5}},
+			  5:{'LLEGATREN_C':6}},
+			  6:{'SALETREN_C':7}},
+			  7:{'BAJARBAR_C':8}},
+			  8:{'LEVANTARBAR_C':9}},
+			  9:{'LLEGATREN_D':10}},
+			  10:{'SALETREN_D':11}},
+			  11:{'LLEGATREN_A':12}},
+			  12:{'SALETREN_A':0}}
+
+t_inv_autoa = {0:{'LLEGA_AUTO_A':1},
+			   1:{'AUTO_CRUZA_A':2},
+			   2:{'AUTO_SE_VA_A':0}}
+
+t_inv_autob = {0:{'LLEGA_AUTO_B':1},
+			   1:{'AUTO_CRUZA_B':2},
+			   2:{'AUTO_SE_VA_B':0}}
+
+
+
+
