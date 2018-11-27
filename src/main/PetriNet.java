@@ -144,7 +144,7 @@ public class PetriNet{
         this.marking = this.marking.add(this.incidence.operate(triggeredTransition));
         this.prev_transitions = this.transitions;
         this.transitions = this.generateSensibilizedTransitionsVector();
-        this.timestamps.setEntry(t.getId(), System.currentTimeMillis());
+        this.timestamps.setEntry(t.getId(), System.currentTimeMillis()); //reinicia timestamp de transicion disparada
         this.updateTimeStamps();
     }
 
@@ -206,6 +206,11 @@ public class PetriNet{
     }
 
     private void updateTimeStamps(){
+        /*
+         * Si se sensibilizo una transicion que
+         * antes no estaba sensibilizada, se actualiza
+         * el timestamp
+         */
         double now = (double)System.currentTimeMillis();
         StepFunction PosToOne = new StepFunction(new double[]{0., 1}, new double[]{0., 1.});
         RealVector newSensibilizedTransitions = this.transitions.subtract(this.prev_transitions).map(PosToOne);
@@ -213,6 +218,16 @@ public class PetriNet{
     }
 
     private RealVector getReadyTransitionsVector(){
+        /*
+         * nowVector es un vector con todos los elementos igual
+         * al timestamp actual. Se resta a ese vector el vector
+         * de los timestamps de las transiciones, para obtener
+         * transcurredTime. Se obtiene el vector de los elementos
+         * que estan despues de alpha (moreThanAlpha) y los que estan
+         * antes de beta (lessThanBeta) y por ultimo se hace un and logico
+         * (producto) entre las transiciones sensibilizadas, las que estan
+         * despues de alpha y las que estan antes de beta
+         */
         StepFunction negToZeroElseOne = new StepFunction(new double[]{-1., 0.}, new double[]{0., 1.});
         RealVector nowVector = new ArrayRealVector(this.transitions.getDimension(), (double)System.currentTimeMillis());
         RealVector transcurredTime = nowVector.subtract(this.timestamps);
