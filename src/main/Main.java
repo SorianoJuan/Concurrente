@@ -10,7 +10,7 @@ public class Main{
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_marking.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_inhibitor.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_time.csv",
-             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_baja_policy1.csv"
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_baja_policy.csv"
              // ""
              );
 
