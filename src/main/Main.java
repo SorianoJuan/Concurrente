@@ -19,9 +19,15 @@ public class Main{
         InvariantChecker check = new InvariantChecker
             (
              mon,
-             10,
-             new PInvariant(new int[]{4,16, 17}, 1),
-             new PInvariant(new int[]{1,5,8,9,15,22,23,24,25}, 50)
+             10000,
+             new PInvariant(new int[]{6,8,31}, 1), // AUTOS A
+             new PInvariant(new int[]{4,10,11}, 1), // AUTOS B
+             new PInvariant(new int[]{27,36,42,37,28,43,30,35,7,39,32,44}, 1), // TREN
+             new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
+             new PInvariant(new int[]{2,27}, 1), //ESTACION A
+             new PInvariant(new int[]{0,28}, 1), //ESTACION B
+             new PInvariant(new int[]{5,30}, 1), //ESTACION C
+             new PInvariant(new int[]{3,32}, 1) //ESTACION D
              );
         check.setVerboseLevel(10);
 
@@ -133,12 +139,12 @@ public class Main{
         }
 
         Thread th_check = new Thread(check, "CheckerThread");
-        //th_check.start();
+        th_check.start();
 
         try{
             for(Thread th: ThreadList)
                 th.join();
-            //th_check.join();
+            th_check.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
