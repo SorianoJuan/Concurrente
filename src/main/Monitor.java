@@ -48,8 +48,9 @@ public class Monitor{
             Transition next_t;
 
             while(!this.PNet.isReady(t)){
-                next_t = this.PNet.getNextTransition();
-                this.ConditionQueue[next_t.getId()].signal();
+                if((next_t = this.PNet.getNextTransition()) != null){
+                    this.ConditionQueue[next_t.getId()].signal();
+                }
                 try{
                     this.ConditionQueue[t.getId()].await
                         (this.PNet.getRemainingTime(t), TimeUnit.MILLISECONDS);
@@ -75,8 +76,9 @@ public class Monitor{
                 System.out.println("Transicion disparada: "+t.getName());
             }
             assertTrue(this.PNet.checkPInvariant());
-            next_t = this.PNet.getNextTransition();
-            this.ConditionQueue[next_t.getId()].signal();
+            if((next_t = this.PNet.getNextTransition()) != null){
+                this.ConditionQueue[next_t.getId()].signal();
+            }
             return true;
         }catch(AssertionError e){
             System.out.println

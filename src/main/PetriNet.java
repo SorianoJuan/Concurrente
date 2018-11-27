@@ -77,7 +77,6 @@ public class PetriNet{
         this.transitions = this.generateSensibilizedTransitionsVector();
         this.prev_transitions = new ArrayRealVector(this.transitions.getDimension());
         this.timestamps = new ArrayRealVector(this.transitions.getDimension(), (double)System.currentTimeMillis());
-        this.policy = MatrixUtils.createRealIdentityMatrix(this.transitions.getDimension());
         this.tlist = generateTransitionList(incidenceFile);
     }
 
@@ -107,7 +106,8 @@ public class PetriNet{
         try {
             t = this.nextTransitionMethod.call();
         } catch(Exception e){
-            System.out.println("Error: Error de entrada/salida");
+            e.printStackTrace();
+            System.out.println("Error: Error en calculo de transicion");
             System.exit(-1);
         }
         return t;
@@ -117,11 +117,12 @@ public class PetriNet{
         RealVector readyTransitions = this.getReadyTransitionsVector();
         int dim = readyTransitions.getDimension();
         int r=0;
-        for(int i = 0; i < dim; i++){
+        int i;
+        for(i = 0; i < dim*10; i++){
             r = this.rand.nextInt(dim);
             if(readyTransitions.getEntry(r) == 1) break;
         }
-        return this.tlist.get(r);
+        return i < dim*10 ? this.tlist.get(r) : null ;
     }
 
     private Transition getNextPriorityTransition(){
@@ -130,6 +131,7 @@ public class PetriNet{
         for(i = 0; i<aux.getDimension(); i++){
             if(aux.getEntry(i) > 0) break;
         }
+        if(i == aux.getDimension()) return null;
         aux.set(0.);
         aux.setEntry(i, 1.);
         aux = this.policy.transpose().operate(aux);

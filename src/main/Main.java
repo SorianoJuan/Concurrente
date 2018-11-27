@@ -10,7 +10,8 @@ public class Main{
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_marking.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_inhibitor.csv",
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_time.csv",
-             ""
+             "./includes/4_estaciones_FINAL/4_estaciones_FINAL_baja_policy1.csv"
+             // ""
              );
 
         pnet.setPInvariants
@@ -19,7 +20,6 @@ public class Main{
                     new PInvariant(new int[]{6,8,31}, 1), // AUTOS A
                     new PInvariant(new int[]{4,10,11}, 1), // AUTOS B
                     new PInvariant(new int[]{27,36,42,37,28,43,30,35,7,39,32,44}, 1), // TREN
-                    // new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
                     new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
                     new PInvariant(new int[]{2,27}, 1), //ESTACION A
                     new PInvariant(new int[]{0,28}, 1), //ESTACION B
