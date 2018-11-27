@@ -12,24 +12,25 @@ public class Main{
              "./includes/4_estaciones_FINAL/4_estaciones_FINAL_time.csv",
              ""
              );
+
+        pnet.setPInvariants
+            (new PInvariant[]
+                {
+                    new PInvariant(new int[]{6,8,31}, 1), // AUTOS A
+                    new PInvariant(new int[]{4,10,11}, 1), // AUTOS B
+                    new PInvariant(new int[]{27,36,42,37,28,43,30,35,7,39,32,44}, 1), // TREN
+                    // new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
+                    new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
+                    new PInvariant(new int[]{2,27}, 1), //ESTACION A
+                    new PInvariant(new int[]{0,28}, 1), //ESTACION B
+                    new PInvariant(new int[]{5,30}, 1), //ESTACION C
+                    new PInvariant(new int[]{3,32}, 1) //ESTACION D
+                });
+
         Monitor mon = new Monitor(pnet);
         mon.stopAfterTransitionsFired(10000);
         mon.setVerboseLevel(10);
 
-        InvariantChecker check = new InvariantChecker
-            (
-             mon,
-             10000,
-             new PInvariant(new int[]{6,8,31}, 1), // AUTOS A
-             new PInvariant(new int[]{4,10,11}, 1), // AUTOS B
-             new PInvariant(new int[]{27,36,42,37,28,43,30,35,7,39,32,44}, 1), // TREN
-             new PInvariant(new int[]{38,24,25,26,29,18,1,17,19,12,14}, 100), // GENTE
-             new PInvariant(new int[]{2,27}, 1), //ESTACION A
-             new PInvariant(new int[]{0,28}, 1), //ESTACION B
-             new PInvariant(new int[]{5,30}, 1), //ESTACION C
-             new PInvariant(new int[]{3,32}, 1) //ESTACION D
-             );
-        check.setVerboseLevel(10);
 
         ArrayList<Task> TaskList = new ArrayList<>();
 
@@ -125,7 +126,6 @@ public class Main{
         TaskList.add(new Task(new String[]{"SUBIR_GENTE_VAG"}, pnet, mon, "subeVag"));
         TaskList.add(new Task(new String[]{"BAJAR_GENTE_MAQ"}, pnet, mon, "bajaMaq"));
         TaskList.add(new Task(new String[]{"BAJAR_GENTE_VAG"}, pnet, mon, "bajaVag"));
-        
 
 
         ThreadGroup tg = new ThreadGroup("Task Threads");
@@ -138,13 +138,9 @@ public class Main{
             ThreadList.add(TaskThread);
         }
 
-        Thread th_check = new Thread(check, "CheckerThread");
-        th_check.start();
-
         try{
             for(Thread th: ThreadList)
                 th.join();
-            th_check.join();
         } catch (InterruptedException e){
             e.printStackTrace();
         }
