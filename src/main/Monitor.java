@@ -1,11 +1,10 @@
 package main;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.IntFunction;
+
+import static org.junit.Assert.assertTrue;
 
 public class Monitor{
     private PetriNet PNet;
@@ -13,7 +12,6 @@ public class Monitor{
     private int verbose;
     private Runnable op;
     private Condition[] ConditionQueue;
-    // private Condition CourtesyQueue;
 
     private ReentrantLock lock;
 
@@ -38,18 +36,6 @@ public class Monitor{
 
     public void setVerboseLevel(int lvl){
         this.verbose = lvl;
-    }
-
-    public boolean checkNet(ArrayList<PInvariant> invList) throws VerifyError{
-        this.lock.lock();
-        for(PInvariant inv: invList){
-            if(!this.PNet.checkPInvariant(inv)){
-                this.lock.unlock();
-                throw new VerifyError("No se cumple con un invariante");
-            }
-        }
-        this.lock.unlock();
-        return this.count >= 0;
     }
 
     public boolean exec(Transition t){
@@ -88,9 +74,16 @@ public class Monitor{
             if(this.verbose > 0){
                 System.out.println("Transicion disparada: "+t.getName());
             }
+            assertTrue(this.PNet.checkPInvariant());
             next_t = this.PNet.getNextTransition();
             this.ConditionQueue[next_t.getId()].signal();
             return true;
+        }catch(AssertionError e){
+            System.out.println
+                ("Msg From: "+Thread.currentThread().getName()+
+                 "\n[!] ERROR: Algun invariante no se cumple, terminando");
+            System.exit(-1);
+            return false;
         }finally{
             if(this.lock.isHeldByCurrentThread())this.lock.unlock();
         }

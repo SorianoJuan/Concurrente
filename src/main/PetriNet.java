@@ -29,6 +29,7 @@ public class PetriNet{
     private RealMatrix incidence;
     private RealMatrix inhibition;
     private RealMatrix policy;
+    private PInvariant[] invariants;
 
     private Random rand;
     private Callable<Transition> nextTransitionMethod;
@@ -78,6 +79,10 @@ public class PetriNet{
         this.timestamps = new ArrayRealVector(this.transitions.getDimension(), (double)System.currentTimeMillis());
         this.policy = MatrixUtils.createRealIdentityMatrix(this.transitions.getDimension());
         this.tlist = generateTransitionList(incidenceFile);
+    }
+
+    public void setPInvariants(PInvariant[] inv){
+        this.invariants = inv;
     }
 
     public static final int MULTIPLIER = 1000;
@@ -273,12 +278,15 @@ public class PetriNet{
         return result;
     }
 
-    public boolean checkPInvariant(PInvariant inv){
-        int[] plist = inv.getPlaceArray();
-        int value = inv.getValue();
-        RealVector vaux = new ArrayRealVector(this.incidence.getRowDimension());
-        Arrays.stream(plist).forEach(i -> vaux.setEntry(i, 1.));
-        return value == (int) vaux.dotProduct(this.marking);
+    public boolean checkPInvariant(){
+        for(PInvariant inv: this.invariants){
+            int[] plist = inv.getPlaceArray();
+            int value = inv.getValue();
+            RealVector vaux = new ArrayRealVector(this.incidence.getRowDimension());
+            Arrays.stream(plist).forEach(i -> vaux.setEntry(i, 1.));
+            if(value != (int) vaux.dotProduct(this.marking))return false;
+        }
+        return true;
     }
 
     public RealVector getSensibilizedTransitionVector(){
